@@ -7,9 +7,9 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/LoudRun/derpy/util"
 	"github.com/alex-ant/gps-sort/location"
 	"github.com/alex-ant/gps-sort/reader"
+	"github.com/alex-ant/gps-sort/util"
 )
 
 var (
