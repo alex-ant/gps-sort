@@ -38,6 +38,12 @@ func main() {
 	// Retrieve parsed data.
 	parsedData := fileReader.GetData()
 
+	// Check whether the number of records in the dataset is less of equal to the
+	// requested number of items to print.
+	if *topAmount > len(parsedData) {
+		log.Fatalf("the dataset contains %d records, but the requested amount to print is %d", len(parsedData), *topAmount)
+	}
+
 	// Sort the dataset.
 	location.SortByDistance(&location.Record{
 		Latitude:  *comparisonPointLat,
