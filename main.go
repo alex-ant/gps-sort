@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"log"
 	"runtime"
+	"time"
 
+	"github.com/LoudRun/derpy/util"
 	"github.com/alex-ant/gps-sort/location"
 	"github.com/alex-ant/gps-sort/reader"
 )
@@ -46,10 +48,17 @@ func main() {
 	}
 
 	// Sort the dataset.
+	sortStart := time.Now()
+
 	location.SortByDistance(&location.Record{
 		Latitude:  *comparisonPointLat,
 		Longitude: *comparisonPointLng,
 	}, parsedData)
+
+	sortDur := util.GetMicrosecondsSince(sortStart)
+
+	// Print sorting duration in microseconds.
+	fmt.Printf("the sorting of %d records has taken %d microseconds\n\n", len(parsedData), sortDur)
 
 	// Print the closest coordinates to the comparison point.
 	fmt.Printf("== TOP %d closest coordinates to %f,%f ==\n", *topAmount, *comparisonPointLat, *comparisonPointLng)
