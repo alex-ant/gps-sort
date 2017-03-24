@@ -41,7 +41,8 @@ func main() {
 	// Check whether the number of records in the dataset is less of equal to the
 	// requested number of items to print.
 	if *topAmount > len(parsedData) {
-		log.Fatalf("the dataset contains %d records, but the requested amount to print is %d", len(parsedData), *topAmount)
+		log.Fatalf("the dataset contains %d records, but the requested amount to print is %d",
+			len(parsedData), *topAmount)
 	}
 
 	// Sort the dataset.
@@ -53,7 +54,8 @@ func main() {
 	// Print the closest coordinates to the comparison point.
 	fmt.Printf("== TOP %d closest coordinates to %f,%f ==\n", *topAmount, *comparisonPointLat, *comparisonPointLng)
 	for i, point := range parsedData[:*topAmount] {
-		fmt.Printf("%d --> ID: %d, Latitude: %f, Longitude: %f\n", i+1, point.ID, point.Latitude, point.Longitude)
+		fmt.Printf("%d --> ID: %d, Latitude: %f, Longitude: %f, Distance: %d meters\n",
+			i+1, point.ID, point.Latitude, point.Longitude, point.Distance)
 	}
 
 	// Print an empty line as a separator.
@@ -62,6 +64,7 @@ func main() {
 	// Print the furthest coordinates to the comparison point.
 	fmt.Printf("== TOP %d furthest coordinates to %f,%f ==\n", *topAmount, *comparisonPointLat, *comparisonPointLng)
 	for i := len(parsedData) - 1; i > len(parsedData)-1-*topAmount; i-- {
-		fmt.Printf("%d --> ID: %d, Latitude: %f, Longitude: %f\n", i+1, parsedData[i].ID, parsedData[i].Latitude, parsedData[i].Longitude)
+		fmt.Printf("%d --> ID: %d, Latitude: %f, Longitude: %f, Distance: %d meters\n",
+			len(parsedData)-i, parsedData[i].ID, parsedData[i].Latitude, parsedData[i].Longitude, parsedData[i].Distance)
 	}
 }

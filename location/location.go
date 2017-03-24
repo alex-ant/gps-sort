@@ -11,6 +11,7 @@ type Record struct {
 	ID        int
 	Latitude  float64
 	Longitude float64
+	Distance  int
 }
 
 // NewFromStrings takes the required data in a form of strings, converts it
@@ -43,9 +44,13 @@ func NewFromStrings(id, lat, lng string) (r *Record, err error) {
 }
 
 // SortByDistance sorts the recs list according to the distance to the
-// point location.
+// point location and sets the calculated distance to each record.
 func SortByDistance(point *Record, recs []*Record) {
 	sort.Slice(recs, func(i, j int) bool {
-		return calculateDistance(recs[i], point) < calculateDistance(recs[j], point)
+		// Calculate and set distances.
+		recs[i].Distance = calculateDistance(recs[i], point)
+		recs[j].Distance = calculateDistance(recs[j], point)
+
+		return recs[i].Distance < recs[j].Distance
 	})
 }
