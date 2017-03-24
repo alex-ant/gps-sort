@@ -17,7 +17,7 @@ func degreesToRadians(dg float64) float64 {
 
 // Using the first computational formula from here: https://en.wikipedia.org/wiki/Great-circle_distance.
 // The result is being returned in meters.
-func calculateDistance(r1, r2 Record) int {
+func calculateDistance(r1, r2 *Record) int {
 	// Calculate radians.
 	r1LatRad := degreesToRadians(r1.Latitude)
 	r2LatRad := degreesToRadians(r2.Latitude)
