@@ -67,6 +67,6 @@ func TestCalculateAndSortDistances(t *testing.T) {
 
 	// Validate the results.
 	if recs[0].ID != 3 || recs[1].ID != 2 || recs[2].ID != 1 {
-		t.Error("failed to sort a slice of location point by distance", *recs[0], *recs[1], *recs[2])
+		t.Error("failed to sort a slice of location points by distance", *recs[0], *recs[1], *recs[2])
 	}
 }
