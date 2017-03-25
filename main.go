@@ -47,18 +47,28 @@ func main() {
 			len(parsedData), *topAmount)
 	}
 
-	// Sort the dataset.
-	sortStart := time.Now()
+	// Calculate relative distances.
+	fmt.Printf("calculating relative distances of %d records to %f,%f...\n", len(parsedData), *comparisonPointLat, *comparisonPointLng)
 
-	location.SortByDistance(&location.Record{
+	distStart := time.Now()
+	location.CalculateDistances(&location.Record{
 		Latitude:  *comparisonPointLat,
 		Longitude: *comparisonPointLng,
 	}, parsedData)
+	distDur := util.GetMicrosecondsSince(distStart)
 
+	// Print distances' calculation duration in microseconds.
+	fmt.Printf("time taken: %d microseconds\n\n", distDur)
+
+	// Sort the dataset.
+	fmt.Println("sorting records by distance...")
+
+	sortStart := time.Now()
+	location.SortByDistance(parsedData)
 	sortDur := util.GetMicrosecondsSince(sortStart)
 
 	// Print sorting duration in microseconds.
-	fmt.Printf("the sorting of %d records has taken %d microseconds\n\n", len(parsedData), sortDur)
+	fmt.Printf("time taken: %d microseconds\n\n", sortDur)
 
 	// Print the closest coordinates to the comparison point.
 	fmt.Printf("== TOP %d closest coordinates to %f,%f ==\n", *topAmount, *comparisonPointLat, *comparisonPointLng)

@@ -43,14 +43,18 @@ func NewFromStrings(id, lat, lng string) (r *Record, err error) {
 	return
 }
 
-// SortByDistance sorts the recs list according to the distance to the
-// point location and sets the calculated distance to each record.
-func SortByDistance(point *Record, recs []*Record) {
-	sort.Slice(recs, func(i, j int) bool {
-		// Calculate and set distances.
-		recs[i].Distance = calculateDistance(recs[i], point)
-		recs[j].Distance = calculateDistance(recs[j], point)
+// CalculateDistances calculates the relative distance of each record to the
+// provided point and stores the result correspondingly.
+func CalculateDistances(point *Record, recs []*Record) {
+	for _, rec := range recs {
+		rec.Distance = calculateDistance(rec, point)
+	}
+}
 
+// SortByDistance sorts the recs list according to the distance to the
+// point location.
+func SortByDistance(recs []*Record) {
+	sort.Slice(recs, func(i, j int) bool {
 		return recs[i].Distance < recs[j].Distance
 	})
 }
