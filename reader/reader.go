@@ -22,13 +22,13 @@ func New(filePath string) *Reader {
 	}
 }
 
-// GetData returns the data value.
-func (r *Reader) GetData() []*location.Record {
+// GetLocationPoints returns the location points data.
+func (r *Reader) GetLocationPoints() []*location.Record {
 	return r.data
 }
 
-// Read reads file contents into the memory.
-func (r *Reader) Read() error {
+// ReadLocationPoints reads file contents into the memory.
+func (r *Reader) ReadLocationPoints() error {
 	// Read the file.
 	f, fErr := os.Open(r.filePath)
 	if fErr != nil {

@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/alex-ant/gps-sort/db"
 	"github.com/alex-ant/gps-sort/location"
 	"github.com/alex-ant/gps-sort/reader"
 	"github.com/alex-ant/gps-sort/util"
@@ -14,13 +15,25 @@ import (
 
 var (
 	inputFile = flag.String("input-file", "geoData.csv", "Input CSV File")
+
+	mysqlHost     = flag.String("mysql-host", "127.0.0.1", "MySQL host")
+	mysqlPort     = flag.Int("mysql-port", 3306, "MySQL port")
+	mysqlUser     = flag.String("mysql-user", "root", "MySQL user")
+	mysqlPass     = flag.String("mysql-pass", "my-secret-pw", "MySQL password")
+	mysqlDatabase = flag.String("mysql-database", "locations", "MySQL database name")
+
+	inputMode = flag.String("input-mode", "file", "Data location (file or db)")
+
 	topAmount = flag.Int("top-amount", 5, "A number of records to show in TOPs")
 
 	comparisonPointLat = flag.Float64("comparison-point-lat", 51.925146, "The latitude of the point the distance must be calculated to")
 	comparisonPointLng = flag.Float64("comparison-point-lng", 4.478617, "The longitude of the point the distance must be calculated to")
 )
 
-var fileReader *reader.Reader
+const (
+	modeFile string = "file"
+	modeDB   string = "db"
+)
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -28,17 +41,48 @@ func main() {
 	// Parse flags.
 	flag.Parse()
 
-	// Initialize file reader.
-	fileReader = reader.New(*inputFile)
+	var parsedData []*location.Record
 
-	// Read the input file.
-	readErr := fileReader.Read()
-	if readErr != nil {
-		log.Fatal(readErr)
+	// Choose data location basing on the selected input mode.
+	switch *inputMode {
+	case modeFile:
+		// Initialize file reader.
+		fileReader := reader.New(*inputFile)
+
+		// Read the input file.
+		readErr := fileReader.ReadLocationPoints()
+		if readErr != nil {
+			log.Fatal(readErr)
+		}
+
+		// Retrieve parsed data.
+		parsedData = fileReader.GetLocationPoints()
+
+	case modeDB:
+		// Connect to the database
+		dbClient, dbClientErr := db.New(db.Properties{
+			User:     *mysqlUser,
+			Pass:     *mysqlPass,
+			Host:     *mysqlHost,
+			Port:     *mysqlPort,
+			Database: *mysqlDatabase,
+		})
+		if dbClientErr != nil {
+			log.Fatal(dbClientErr)
+		}
+
+		// Read the data.
+		readErr := dbClient.ReadLocationPoints()
+		if readErr != nil {
+			log.Fatal(readErr)
+		}
+
+		// Retrieve parsed data.
+		parsedData = dbClient.GetLocationPoints()
+
+	default:
+		log.Fatalf("invalid input mode %s (must be either %s or %s)", *inputMode, modeFile, modeDB)
 	}
-
-	// Retrieve parsed data.
-	parsedData := fileReader.GetData()
 
 	// Check whether the number of records in the dataset is less of equal to the
 	// requested number of items to print.
