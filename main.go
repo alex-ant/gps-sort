@@ -89,6 +89,9 @@ func main() {
 		// Retrieve parsed data.
 		parsedData = dbClient.GetLocationPoints()
 
+		// Close the connection.
+		dbClient.Close()
+
 	default:
 		log.Fatalf("invalid input mode %s (must be either %s or %s)", *inputMode, modeFile, modeDB)
 	}
