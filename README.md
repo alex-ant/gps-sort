@@ -17,6 +17,14 @@ A coordinates sorting tool.
 |comparison-point-lat|51.925146|The latitude of the point the distance must be calculated to|
 |comparison-point-lng|4.478617|The longitude of the point the distance must be calculated to|
 
+### Godep required
+
+The application uses MySQL driver. Godep allows to use the one provided in the same repository.
+
+```
+go get github.com/tools/godep
+```
+
 ### Reading data from file
 
 A quick example using default flags.
