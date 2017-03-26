@@ -1,7 +1,7 @@
 #!/bin/bash
 
 AMOUNT=$1
-OUTPUT=geoBig.csv1
+OUTPUT=geoBig2.csv
 
 if [ "$AMOUNT" == "" ]; then
   AMOUNT=1000000

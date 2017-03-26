@@ -87,3 +87,13 @@ time taken: 14 microseconds
 4 --> ID: 382582, Latitude: 37.176867, Longitude: -3.608897, Distance: 1758080 meters
 5 --> ID: 382693, Latitude: 40.970240, Longitude: -5.661052, Distance: 1441719 meters
 ```
+
+### Generate random geodata CSV file
+
+The repository contains a bash tool for random location generation.
+
+```
+./generate-coordinates-csv.sh 1000
+```
+
+This will generate the *geoBig2.csv* file containing 1000 randomly generated location records.
