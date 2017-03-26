@@ -1,0 +1,12 @@
+{
+	"ImportPath": "github.com/alex-ant/gps-sort",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.3-4-g53e2a9b",
+			"Rev": "53e2a9bf25b20e8f597896666f0663d84e22c68e"
+		}
+	]
+}
