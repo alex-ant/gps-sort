@@ -1,7 +1,11 @@
 #!/bin/bash
 
-AMOUNT=1000000
-OUTPUT=geoBig.csv
+AMOUNT=$1
+OUTPUT=geoBig.csv1
+
+if [ "$AMOUNT" == "" ]; then
+  AMOUNT=1000000
+fi
 
 # randomly select either negative or positive value
 function neg {
