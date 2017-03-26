@@ -46,6 +46,8 @@ func main() {
 	// Choose data location basing on the selected input mode.
 	switch *inputMode {
 	case modeFile:
+		fmt.Printf("reading from the local file %s\n\n", *inputFile)
+
 		// Initialize file reader.
 		fileReader := reader.New(*inputFile)
 
@@ -59,6 +61,13 @@ func main() {
 		parsedData = fileReader.GetLocationPoints()
 
 	case modeDB:
+		fmt.Printf("reading from the database %s:%s@tcp(%s:%d)/%s\n\n",
+			*mysqlUser,
+			*mysqlPass,
+			*mysqlHost,
+			*mysqlPort,
+			*mysqlDatabase)
+
 		// Connect to the database
 		dbClient, dbClientErr := db.New(db.Properties{
 			User:     *mysqlUser,
