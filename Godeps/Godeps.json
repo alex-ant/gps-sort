@@ -7,6 +7,11 @@
 			"ImportPath": "github.com/go-sql-driver/mysql",
 			"Comment": "v1.3-4-g53e2a9b",
 			"Rev": "53e2a9bf25b20e8f597896666f0663d84e22c68e"
+		},
+		{
+			"ImportPath": "gopkg.in/DATA-DOG/go-sqlmock.v1",
+			"Comment": "v1.2.0",
+			"Rev": "b983233bc0bbea4dc6e8ec8c8c923d935765ffec"
 		}
 	]
 }

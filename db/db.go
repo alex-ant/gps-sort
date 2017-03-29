@@ -6,6 +6,9 @@ import (
 
 	// import mysql driver
 	_ "github.com/go-sql-driver/mysql"
+
+	// Godeps does not support build tags, so this import is a workaround to get packages vendoered by godeps.
+	_ "gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
 // Client contains database client.
