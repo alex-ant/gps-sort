@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"io"
 	"os"
-
-	"github.com/alex-ant/gps-sort/location"
+	"strconv"
 )
 
 // Reader contains reader data.
 type Reader struct {
 	filePath string
-	data     []*location.Record
 }
 
 // New returns new Reader.
@@ -22,18 +20,15 @@ func New(filePath string) *Reader {
 	}
 }
 
-// GetLocationPoints returns the location points data.
-func (r *Reader) GetLocationPoints() []*location.Record {
-	return r.data
-}
-
-// ReadLocationPoints reads file contents into the memory.
-func (r *Reader) ReadLocationPoints() error {
+// GetLocationPoints reads file contents and returns the location points data.
+func (r *Reader) GetLocationPoints(handler func(id int, lat, lng float64) error) error {
 	// Read the file.
 	f, fErr := os.Open(r.filePath)
 	if fErr != nil {
 		return fmt.Errorf("failed to read file %s: %s", r.filePath, fErr.Error())
 	}
+
+	defer f.Close()
 
 	// Initialize the CSV reader.
 	reader := csv.NewReader(f)
@@ -59,14 +54,29 @@ func (r *Reader) ReadLocationPoints() error {
 			return fmt.Errorf("invalid record received at line %d: %v", i, record)
 		}
 
-		// Parse the record.
-		locationRecord, locationRecordErr := location.NewFromStrings(record[0], record[1], record[2])
-		if locationRecordErr != nil {
-			return fmt.Errorf("failed to parse location record at line %d: %s", i, locationRecordErr.Error())
+		// Convert ID.
+		id, idErr := strconv.Atoi(record[0])
+		if idErr != nil {
+			return fmt.Errorf("invalid ID received (%s) at line %d", record[0], i)
 		}
 
-		// Append the record to the dataset.
-		r.data = append(r.data, locationRecord)
+		// Convert Latitude.
+		lat, latErr := strconv.ParseFloat(record[1], 64)
+		if latErr != nil {
+			return fmt.Errorf("invalid Latitude received (%s) at line %d", record[1], i)
+		}
+
+		// Convert Longitude.
+		lng, lngErr := strconv.ParseFloat(record[2], 64)
+		if lngErr != nil {
+			return fmt.Errorf("invalid Longitude received (%s) at line %d", record[2], i)
+		}
+
+		// Call the handler. Stop looping through the results if an error received.
+		handlerErr := handler(id, lat, lng)
+		if handlerErr != nil {
+			return nil
+		}
 	}
 
 	return nil

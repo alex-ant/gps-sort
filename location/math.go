@@ -15,14 +15,15 @@ func degreesToRadians(dg float64) float64 {
 	return dg * math.Pi / 180
 }
 
-// Using the first computational formula from here: https://en.wikipedia.org/wiki/Great-circle_distance.
+// CalculateDistance calculates the distance between two coordinates
+// using the first computational formula from here: https://en.wikipedia.org/wiki/Great-circle_distance.
 // The result is being returned in meters.
-func calculateDistance(r1, r2 *Record) int {
+func CalculateDistance(lat1, lng1, lat2, lng2 float64) int {
 	// Calculate radians.
-	r1LatRad := degreesToRadians(r1.Latitude)
-	r2LatRad := degreesToRadians(r2.Latitude)
-	r1LngRad := degreesToRadians(r1.Longitude)
-	r2LngRad := degreesToRadians(r2.Longitude)
+	r1LatRad := degreesToRadians(lat1)
+	r2LatRad := degreesToRadians(lat2)
+	r1LngRad := degreesToRadians(lng1)
+	r2LngRad := degreesToRadians(lng2)
 
 	// Calculate absolute differences.
 	latDiff := absoluteDifference(r1LatRad, r2LatRad)
