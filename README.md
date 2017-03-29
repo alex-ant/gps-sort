@@ -30,7 +30,7 @@ go get github.com/tools/godep
 A quick example using default flags.
 
 1. Navigate to the project's directory and make sure the *geoData.csv* file is there.
-2. Run `godep go run main.go location-record.go -input-mode file`
+2. Run `godep go build && ./gps-sort -input-mode file`
 3. An output similar to the following will appear:
 ```
 reading from the local file geoData.csv
@@ -62,7 +62,7 @@ A quick example using default flags.
 
 1. Navigate to the project's directory.
 2. Run the MySQL instance executing the following: `docker run --name gps-sort-mysql -e MYSQL_DATABASE=locations -e MYSQL_ROOT_PASSWORD=my-secret-pw -v $PWD/sql:/docker-entrypoint-initdb.d -p 3306:3306 -d mysql:5.7`
-3. Run `godep go run main.go location-record.go -input-mode db`
+3. Run `godep go build && ./gps-sort -input-mode db`
 4. An output similar to the following will appear:
 ```
 reading from the database root:my-secret-pw@tcp(127.0.0.1:3306)/locations
