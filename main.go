@@ -29,7 +29,11 @@ func main() {
 		fmt.Printf("reading from the local file %s\n\n", flags.Values.InputFile)
 
 		// Initialize file reader.
-		dataStorage = reader.New(flags.Values.InputFile)
+		var dataStorageErr error
+		dataStorage, dataStorageErr = reader.New(flags.Values.InputFile)
+		if dataStorageErr != nil {
+			log.Fatal(dataStorageErr)
+		}
 
 	case modeDB:
 		fmt.Printf("reading from the database %s:%s@tcp(%s:%d)/%s\n\n",
@@ -40,13 +44,17 @@ func main() {
 			flags.Values.MySQLDatabase)
 
 		// Connect to the database
-		dataStorage = db.New(db.Properties{
+		var dataStorageErr error
+		dataStorage, dataStorageErr = db.New(db.Properties{
 			User:     flags.Values.MySQLUser,
 			Pass:     flags.Values.MySQLPass,
 			Host:     flags.Values.MySQLHost,
 			Port:     flags.Values.MySQLPort,
 			Database: flags.Values.MySQLDatabase,
 		})
+		if dataStorageErr != nil {
+			log.Fatal(dataStorageErr)
+		}
 
 	default:
 		log.Fatalf("invalid input mode %s (must be either %s or %s)", flags.Values.InputMode, modeFile, modeDB)

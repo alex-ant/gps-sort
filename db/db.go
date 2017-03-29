@@ -10,7 +10,7 @@ import (
 
 // Client contains database client.
 type Client struct {
-	address string
+	db *sql.DB
 }
 
 // Properties contains database connection properties.
@@ -23,35 +23,38 @@ type Properties struct {
 }
 
 // New return a new database connection.
-func New(prop Properties) *Client {
-	return &Client{
-		address: fmt.Sprintf("%s:%s@tcp(%s:%d)/%s",
-			prop.User,
-			prop.Pass,
-			prop.Host,
-			prop.Port,
-			prop.Database),
+func New(prop Properties) (c *Client, err error) {
+	c = new(Client)
+
+	// Assemble the address
+	address := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s",
+		prop.User,
+		prop.Pass,
+		prop.Host,
+		prop.Port,
+		prop.Database)
+
+	// Connect to the database.
+	c.db, err = sql.Open("mysql", address)
+	if err != nil {
+		err = fmt.Errorf("failed to open a connection the database %s: %s", address, err.Error())
+		return
 	}
+
+	// Ping the DB.
+	err = c.db.Ping()
+	if err != nil {
+		err = fmt.Errorf("failed to ping the database %s: %s", address, err.Error())
+		return
+	}
+
+	return
 }
 
 // GetLocationPoints reads database table contents and returns the location points data.
 func (c *Client) GetLocationPoints(handler func(id int, lat, lng float64) error) error {
-	// Connect to the database.
-	client, clientErr := sql.Open("mysql", c.address)
-	if clientErr != nil {
-		return fmt.Errorf("failed to open a connection the database %s: %s", c.address, clientErr.Error())
-	}
-
-	defer client.Close()
-
-	// Ping the DB.
-	pingErr := client.Ping()
-	if pingErr != nil {
-		return fmt.Errorf("failed to ping the database %s: %s", c.address, pingErr.Error())
-	}
-
 	// Read location points from database.
-	rows, rowsErr := client.Query("SELECT ID, Latitude, Longitude FROM points")
+	rows, rowsErr := c.db.Query("SELECT ID, Latitude, Longitude FROM points")
 	if rowsErr != nil {
 		return fmt.Errorf("failed to read location points from database: %s", rowsErr.Error())
 	}

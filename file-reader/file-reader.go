@@ -10,28 +10,27 @@ import (
 
 // Reader contains reader data.
 type Reader struct {
-	filePath string
+	file *os.File
 }
 
 // New returns new Reader.
-func New(filePath string) *Reader {
-	return &Reader{
-		filePath: filePath,
+func New(filePath string) (r *Reader, err error) {
+	r = new(Reader)
+
+	// Read the file.
+	r.file, err = os.Open(filePath)
+	if err != nil {
+		err = fmt.Errorf("failed to read file %s: %s", filePath, err.Error())
+		return
 	}
+
+	return
 }
 
 // GetLocationPoints reads file contents and returns the location points data.
 func (r *Reader) GetLocationPoints(handler func(id int, lat, lng float64) error) error {
-	// Read the file.
-	f, fErr := os.Open(r.filePath)
-	if fErr != nil {
-		return fmt.Errorf("failed to read file %s: %s", r.filePath, fErr.Error())
-	}
-
-	defer f.Close()
-
 	// Initialize the CSV reader.
-	reader := csv.NewReader(f)
+	reader := csv.NewReader(r.file)
 
 	// Scan lines.
 	for i := 0; ; i++ {
