@@ -97,3 +97,9 @@ The repository contains a bash tool for random location generation.
 ```
 
 This will generate the *geoBig2.csv* file containing 1000 randomly generated location records.
+
+### Run unit tests
+
+```
+godep go test -cover ./...
+```
